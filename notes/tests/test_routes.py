@@ -1,12 +1,10 @@
 from http import HTTPStatus
 
-from django.contrib.auth import get_user_model  # type: ignore
 from django.test import TestCase  # type: ignore
 from django.urls import reverse  # type: ignore
 
+from .test_init import User
 from notes.models import Note
-
-User = get_user_model()
 
 
 class TestRoutes(TestCase):
