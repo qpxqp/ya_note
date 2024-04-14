@@ -14,14 +14,6 @@ class TestRoutes(TestCase):
     def setUpTestData(cls):
         """Подготовка данных для класса."""
         cls.LOGIN_PATH = 'users:login'
-        cls.author = User.objects.create(username='Автор')
-        cls.attacker = User.objects.create(username='Злоумышленник')
-        cls.note = Note.objects.create(
-            title='Заголовок заметки',
-            text='Текст заметки',
-            slug='slug-note',
-            author=cls.author
-        )
         cls.URLS = (
             ('notes:home', None),
             (cls.LOGIN_PATH, None),
@@ -33,10 +25,21 @@ class TestRoutes(TestCase):
             ('notes:add', None),
             ('notes:success', None),
         )
-        cls.URLS_FOR_AUTHOR = (
-            ('notes:edit', (cls.note.slug,)),
-            ('notes:detail', (cls.note.slug,)),
-            ('notes:delete', (cls.note.slug,)),
+
+    def setUp(self):
+        """Подготовка данных для теста."""
+        self.author = User.objects.create(username='Автор')
+        self.attacker = User.objects.create(username='Злоумышленник')
+        self.note = Note.objects.create(
+            title='Заголовок заметки',
+            text='Текст заметки',
+            slug='slug-note',
+            author=self.author
+        )
+        self.URLS_FOR_AUTHOR = (
+            ('notes:edit', (self.note.slug,)),
+            ('notes:detail', (self.note.slug,)),
+            ('notes:delete', (self.note.slug,)),
         )
 
     def check_url_equal_status(self, name, args, status=HTTPStatus.OK):
