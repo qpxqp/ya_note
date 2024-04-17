@@ -42,3 +42,10 @@ def note(author):
         slug='note-slug',
         author=author,
     )
+
+@pytest.fixture
+# Фикстура запрашивает другую фикстуру создания заметки.
+def slug_for_args(note):
+    # И возвращает кортеж, который содержит slug заметки.
+    # На то, что это кортеж, указывает запятая в конце выражения.
+    return (note.slug,)
