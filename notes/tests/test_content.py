@@ -1,11 +1,9 @@
 from django.urls import reverse  # type: ignore
 from django.contrib.auth import get_user_model
 
-from .test_init import BaseTestNotesCase
 from notes.forms import NoteForm
 from notes.models import Note
-
-User = get_user_model()
+from notes.tests.test_init import BaseTestNotesCase
 
 
 class TestNotesList(BaseTestNotesCase):

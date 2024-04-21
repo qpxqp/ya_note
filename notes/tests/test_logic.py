@@ -4,11 +4,9 @@ from django.contrib.auth import get_user_model, get_user
 from django.urls import reverse  # type: ignore
 from pytils.translit import slugify
 
-from .test_init import BaseTestNotesCase
 from notes.forms import WARNING
 from notes.models import Note
-
-User = get_user_model()
+from notes.tests.test_init import BaseTestNotesCase
 
 
 class TestNoteCreateEditDelete(BaseTestNotesCase):
