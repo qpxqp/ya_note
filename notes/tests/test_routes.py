@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from django.contrib.auth import get_user_model, get_user
+from django.contrib.auth import get_user
 from django.urls import reverse  # type: ignore
 
 from notes.models import Note

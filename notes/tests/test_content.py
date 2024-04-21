@@ -1,5 +1,4 @@
 from django.urls import reverse  # type: ignore
-from django.contrib.auth import get_user_model
 
 from notes.forms import NoteForm
 from notes.models import Note
