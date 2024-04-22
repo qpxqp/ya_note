@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user  # type: ignore
 from django.urls import reverse  # type: ignore
 
 from notes.forms import NoteForm
@@ -33,13 +34,17 @@ class TestNotesList(BaseTestNotesCase):
             cls.NOTE_SLUG.format(index=cls.NOTE_INDEX),
         ))
 
+        cls.AUTHOR_NOTES_COUNT = (
+            Note.objects.all().filter(author=cls.author).count()
+        )
+
     # ТЕСТЫ ======================================================
     def test_a_note_in_context_author_and_notauthor(self):
         """Проверка наличия заметки на странице со списком заметок."""
         for user, in_notes in (
             (self.author_client, True), (self.not_author_client, False)
         ):
-            with self.subTest(user=user):
+            with self.subTest(user=get_user(user)):
                 response = user.get(self.URL_NOTES_LIST)
                 notes = response.context['object_list']
                 note = Note.objects.get(
@@ -59,4 +64,4 @@ class TestNotesList(BaseTestNotesCase):
         """Проверка количества заметок на странице автора."""
         response = self.author_client.get(self.URL_NOTES_LIST)
         notes_count = response.context['object_list'].count()
-        self.assertEqual(notes_count, self.NOTES_COUNT)
+        self.assertEqual(notes_count, self.AUTHOR_NOTES_COUNT)

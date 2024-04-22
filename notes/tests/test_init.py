@@ -1,6 +1,8 @@
 from django.test import Client, TestCase  # type: ignore
 from django.urls import reverse  # type: ignore
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model  # type: ignore
+
+from notes.models import Note
 
 User = get_user_model()
 
@@ -34,4 +36,19 @@ class BaseTestNotesCase(TestCase):
         cls.not_author_client = Client()
         cls.not_author_client.force_login(cls.not_author)
 
-        cls.anonymous_client = Client()
+        cls.note = Note.objects.create(
+            title=cls.NOTE_TITLE,
+            text=cls.NOTE_TEXT,
+            slug=cls.NOTE_SLUG,
+            author=cls.author
+        )
+
+        cls.URL_NOTES_EDIT = reverse(
+            cls.PATH_EDIT, args=(cls.note.slug,)
+        )
+        cls.URL_NOTES_DELETE = reverse(
+            cls.PATH_DELETE, args=(cls.note.slug,)
+        )
+        cls.URL_NOTES_DETAIL = reverse(
+            cls.PATH_DETAIL, args=(cls.note.slug,)
+        )

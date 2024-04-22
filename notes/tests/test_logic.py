@@ -1,8 +1,7 @@
 from http import HTTPStatus
 
-from django.contrib.auth import get_user
-from django.urls import reverse  # type: ignore
-from pytils.translit import slugify
+from django.contrib.auth import get_user  # type: ignore
+from pytils.translit import slugify  # type: ignore
 
 from notes.forms import WARNING
 from notes.models import Note
@@ -31,21 +30,6 @@ class TestNoteCreateEditDelete(BaseTestNotesCase):
             'slug': cls.NEW_NOTE_SLUG,
         }
 
-    def setUp(self):
-        self.note = Note.objects.create(
-            title=self.NOTE_TITLE,
-            text=self.NOTE_TEXT,
-            slug=self.NOTE_SLUG,
-            author=self.author
-        )
-
-        self.URL_NOTES_EDIT = reverse(
-            self.PATH_EDIT, args=(self.note.slug,)
-        )
-        self.URL_NOTES_DELETE = reverse(
-            self.PATH_DELETE, args=(self.note.slug,)
-        )
-
     # ТЕСТЫ ======================================================
     def test_a_authorized_user_created_note(self):
         """Тестирование создания заметки автором."""
@@ -64,8 +48,8 @@ class TestNoteCreateEditDelete(BaseTestNotesCase):
     def test_b_anonymous_user_cant_create_note(self):
         """Тестирование создания заметки от анонимного клиента."""
         notes_count = Note.objects.count()
-        self.anonymous_client.post(self.URL_NOTES_ADD,
-                                   data=self.form_data_new_slug)
+        self.client.post(self.URL_NOTES_ADD,
+                         data=self.form_data_new_slug)
         self.assertEqual(Note.objects.count(), notes_count)
 
     def test_c_user_cant_edit_note_of_another_user(self):
@@ -96,6 +80,8 @@ class TestNoteCreateEditDelete(BaseTestNotesCase):
         self.note.refresh_from_db()
         self.assertEqual(self.note.title, self.form_data['title'])
         self.assertEqual(self.note.text, self.form_data['text'])
+        self.assertEqual(self.note.slug, self.form_data['slug'])
+        self.assertEqual(self.note.author, get_user(self.author_client))
 
     def test_f_author_can_delete_note(self):
         """Тестирование на удаление от имени автора."""
